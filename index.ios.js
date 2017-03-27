@@ -39,18 +39,55 @@ class GroceryApp extends Component
 	    return (
 	      <View style={styles.container}>
 
-	        <StatusBar title="Grocery List"/>
+	        <StatusBar title="Grocery List ONE"/>
 
 	        <ListView dataSource={this.state.dataSource}
 			renderRow={this._renderItem.bind(this)}
 			style={styles.listview} />
 
-	        <ActionButton title="Add"
-                          onPress={() => console.log("Button tapped!")} />
+              <ActionButton title="Add" onpress={this._addItem.bind(this)}>
+              </ActionButton>
 
 	      </View>
 	    );
 	  }
+
+    listenForItems(itemsRef) {
+        itemsRef.on('value', (snap) => {
+
+            // get children as an array
+            var items = [];
+            snap.forEach((child) => {
+                items.push({
+                    title: child.val().title,
+                    _key: child.key
+                });
+            });
+
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(items)
+            });
+
+        });
+    }
+
+    //When the ActionButton is tapped, an alert should pop up
+    //prompting the user to enter an item.
+    _addItem() {
+        AlertIOS.prompt(
+            'Add New Item',
+            null,
+            [
+                {
+                    text: 'Add',
+                    onPress: (text) => {
+                        this.itemsRef.push({ title: text })
+                    }
+                },
+            ],
+            'plain-text'
+        );
+    }
 	  
 	//constructor for the root component, GroceryApp. 
 	  constructor(props) {
@@ -60,17 +97,12 @@ class GroceryApp extends Component
 	        rowHasChanged: (row1, row2) => row1 !== row2
 	      })
 	    };
+	    this.itemsRef = firebaseApp.database().ref();
 	  }
-	  
-	//When the component has first been rendered, componentDidMount()
-    //is called. This is where we want set any initial state of the app.
-	  componentDidMount() {
-	      this.setState
-		  ({
-	        dataSource:
-                this.state.dataSource.cloneWithRows([{ title: 'Pizza' }])
-	      })
-	    }
+
+    componentDidMount() {
+        this.listenForItems(this.itemsRef);
+    }
 }
 
 AppRegistry.registerComponent('GroceryApp', () => GroceryApp);
