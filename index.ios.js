@@ -30,7 +30,8 @@ class GroceryApp extends Component
 {
 	_renderItem(item) {
 	    return (
-	      <ListItem item={item} onPress={() => console.log("ListItem tapped!")} />
+	      <ListItem item={item}
+                    onPress={() => console.log("ListItem tapped!")} />
 	    );
 	  }
 
@@ -40,11 +41,12 @@ class GroceryApp extends Component
 
 	        <StatusBar title="Grocery List"/>
 
-	        <ListView datasource={this.state.dataSource}
-			renderrow={this._renderItem.bind(this)}
+	        <ListView dataSource={this.state.dataSource}
+			renderRow={this._renderItem.bind(this)}
 			style={styles.listview} />
 
-	        <ActionButton title="Add" onPress={() => console.log("Button tapped!")} />
+	        <ActionButton title="Add"
+                          onPress={() => console.log("Button tapped!")} />
 
 	      </View>
 	    );
@@ -55,15 +57,18 @@ class GroceryApp extends Component
 	    super(props);
 	    this.state = {
 	      dataSource: new ListView.DataSource({
-	        rowHasChanged: (row1, row2) => row1 !== row2,
+	        rowHasChanged: (row1, row2) => row1 !== row2
 	      })
 	    };
 	  }
 	  
-	//When the component has first been rendered, componentDidMount() is called. This is where we want set any initial state of the app.  
+	//When the component has first been rendered, componentDidMount()
+    //is called. This is where we want set any initial state of the app.
 	  componentDidMount() {
-	      this.setState({
-	        dataSource: this.state.dataSource.cloneWithRows([{ title: 'Pizza' }])
+	      this.setState
+		  ({
+	        dataSource:
+                this.state.dataSource.cloneWithRows([{ title: 'Pizza' }])
 	      })
 	    }
 }
